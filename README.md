@@ -1,4 +1,4 @@
-# Lazyweb
+# jsonserver
 
 The laziest way I found so far for creating custom web apps
 
