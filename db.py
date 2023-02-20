@@ -1,3 +1,6 @@
+import json
+import uuid
+
 import dataset
 from flask import g
 
@@ -14,55 +17,54 @@ You can copy these three files somewhere to make a backup of your database
 DATABASE = "sqlite:///database.db?check_same_thread=False"
 
 def get_table():
-	"""can be called by any function to get access to the database table called 'mytable'"""
+	"""can be called by any function to get access to the database table called 'saves'"""
 
 	db = getattr(g, "_database", None)
 
 	if db is None:
 		db = g._database = dataset.connect(DATABASE)
 
-	return db["mytable"]
+	return db["saves"]
 
-"""
-We are using the database here to store some previous calculation results, but it could be anything!
-some data you collected yourself, user generated content, user accounts...
-
-Just create a new get_<tablename> function for each new table and use them in your new functions
-"""
-
-def set_cache(input, output):
+def save_json(j):
 	"""creates a new row in the database. dataset will insert columns automatically if they don't exist yet
 	the same goes for the table and the database file"""
 
 	table = get_table()
 
+	code = str(uuid.uuid4())
+
 	row = {
-		"input": input,
-		"output": output
+		"code": code,
+		"data": json.dumps(j)
 	}
 
 	table.insert(row)
 
-def get_cache(input):
+	return code
+
+def load_json(code):
 	"""will return None if no row with that input"""
 
 	table = get_table()
 
-	result = table.find_one(input=input)
+	result = table.find_one(code=code)
 
 	if result is None:
 		return None
 
-	return result["output"]
+	return json.loads(result["data"])
 
 """
 Utility to execute requests interactively
 
 $ python
 >>> from db import *
->>> with_context(set_cache, 2, 4)
->>> with_context(get_cache, 2)
-4.0
+>>> code = with_context(save_json, {'test': 123})
+>>> code
+'516a1030-eeec-43a4-b247-c5cf81690c91'
+>>> with_context(load_json, code)
+{'test': 123}
 """
 def with_context(f, *args, **kwargs):
     with app.app_context():

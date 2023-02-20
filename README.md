@@ -8,7 +8,7 @@ Tested with Python 3.9.12
 
 ## Download
 
-```git clone https://github.com/void4/lazyweb.git```
+```git clone https://github.com/void4/jsonserver.git```
 
 ## Install dependencies
 
