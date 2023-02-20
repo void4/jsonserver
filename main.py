@@ -1,5 +1,3 @@
-from random import shuffle
-
 from flask import render_template, request, jsonify
 
 from app import *
