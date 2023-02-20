@@ -13,7 +13,7 @@ Tested with Python 3.9.12
 ## Install dependencies
 
 ```
-cd lazyweb
+cd jsonserver
 python -m pip install -r requirements.txt
 ```
 
