@@ -22,4 +22,5 @@ def r_save():
 
     return jsonify({"code": code})
 
-app.run("localhost", 1337, debug=True)
+if __name__ == "__main__":
+    app.run("localhost", 1337, debug=True)
